@@ -65,15 +65,15 @@
 						expect to see in everday Scala code:
 					</p>
 					<ul>
-						<li>For Expression</li>
-						<li>Foreach</li>
-						<li>Map</li>
-						<li>Option</li>
+						<li><code>for</code> Expression</li>
+						<li><code>foreach</code></li>
+						<li><code>map</code></li>
+						<li><code>Option[T]</code></li>
 						<!-- Series of steps each built on the previous and we want
 					         to return one option, not an Op[Op[Op[...[T]...]]]-->
-						<li>Flatmap</li> 
-						<li>For Comprehension</li>
-						<li>Try</li
+						<li><code>flatMap</code></li> 
+						<li><code>for</code> Comprehension</li>
+						<li><code>Try[T]</code></li>
 					</ul>
 				</section>
 
@@ -99,7 +99,7 @@
 							list.add("c");
 							// ...
 
-							foreach (String l : list) {
+							for (String l : list) {
 							    System.out.println(l);
 							}
 						</script>
@@ -220,7 +220,7 @@
 
 							ArrayList<Integer> sqrs = new ArrayList<Integer>(3);
 
-							foreach (Integer n : list) {
+							for (Integer n : list) {
 								sqrs.add(new Integer(n * n));
 							}
 						</script>
@@ -318,7 +318,7 @@
 
 							public function printUser(int id) {
 								System.out.println(getUserInfo(id).name);
-								// NullPointerException at '.name'
+								// NullReferenceException at '.name'
 							}
 
 						Instead we need to check for the null condition, but this is
@@ -589,8 +589,8 @@
 
 								val name : Option[String] = for {
 									c <- car                            // flatMap of Car
-									d <- c.driver                       // flatMap of User (driver)
-								} yeild(d.firstName + " " + d.lastName) // map to return name (String)
+									d <- c.driver                       // map of User (driver)
+								} yeild(d.firstName + " " + d.lastName) 
 
 								match name {                            // Option[String]
 									case Some(n) => println(n)          // String
@@ -652,7 +652,7 @@
 						<script type="text/template">
 						## Scala Try
 
-						An example of map
+						An example of flatMap
 
 							def liveDangerously(attempt: Int) = {
 								println("Attempt number: " attempt.toString)
@@ -661,8 +661,8 @@
 									throw new Exception("whoops (attempt #" + attempt.toString = ")")
 							}
 
-							val attemptOne = Try { liveDangerously }
-							val attemptTwo = attemptOne.map(res => Try { liveDangerously })
+							val attemptOne = Try { liveDangerously(1) }
+							val attemptTwo = attemptOne.flatMap(res => Try { liveDangerously(2) })
 
 							attemptTwo match {
 								case Failure(ex) => println(ex.message)
@@ -685,7 +685,6 @@
 								}
 								public Item BuyRandomItem(Treasure t) {
 									// throws exception if not enough gold
-									// throws exception if item does not exist
 								}
 							}
 
