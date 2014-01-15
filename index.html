@@ -81,6 +81,10 @@
 				<section>
 					<section>
 						<h2>For Expressions</h2>
+					</section>
+					
+					<section>
+						<h2>For Expressions</h2>
 						<p>
 							The <code>for</code> expression is a common pattern for
 							iterating over data in a collection. It is very similar
@@ -119,6 +123,12 @@
 
 				<!-- Foreach -->
 				<section>
+					<section data-markdown>
+						<script type="text/template">
+						## Scala Foreach
+						</script>
+					</section>
+
 					<section data-markdown>
 						<script type="text/template">
 						## Scala Foreach
@@ -185,6 +195,12 @@
 
 				<!-- Map -->
 				<section>
+					<section data-markdown>
+						<script type="text/template">
+						## Scala Map
+						</script>
+					</section>
+
 					<section data-markdown>
 						<script type="text/template">
 						## Scala Map
@@ -256,6 +272,11 @@
 
 				<!-- Option -->
 				<section>
+					<section data-markdown>
+						<script type="text/template">
+						## Scala Option
+						</script>
+					</section>
 					<section data-markdown>
 						<script type="text/template">
 						## Scala Option
@@ -412,6 +433,12 @@
 					<section data-markdown>
 						<script type="text/template">
 						## Scala flatMap
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala flatMap
 
 						`flatMap` is similar to `map` but is different in it&lsquo;s
 						return-type.
@@ -470,7 +497,7 @@
 									}
 								}
 
-								match name {                            // Option[Option[String]]
+								name match {                            // Option[Option[String]]
 									case Some(n) => n match {           // Option[String]
 										case Some(nn) => println(nn)    // String
 										case None     =>
@@ -528,7 +555,7 @@
 									}
 								}
 
-								match name {                            // Option[String]
+								name match {                            // Option[String]
 									case Some(n) => println(n)          // String
 									case None    =>
 								}
@@ -548,6 +575,29 @@
 						`Option` types. It too can be applied to collections.
 						</script>
 					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala flatmap
+
+						Java Version
+
+							ArrayList<Integer> odd = new ArrayList<Integer>(4);
+							ArrayList<Integer> evn = new ArrayList<Integer>(4);
+
+							odd.add(1); odd.add(3); odd.add(5); odd.add(7);
+							evn.add(2); evn.add(4); evn.add(6); evn.add(8);
+
+							ArrayList<String> output = new ArrayList<String>(4 * 4);
+
+							foreach (Integer o : odd) {
+								foreach (Integer e : even) {
+									output.add(o.toString() + e.toString());
+								}
+							}
+							# => output: ArrayList("12", "14", "16", "18", "32", "34", "36", ...);
+						</script>
+					</section>
 					
 					<section data-markdown>
 						<script type="text/template">
@@ -564,6 +614,12 @@
 
 				<!-- For Comprehensions -->
 				<section>
+					<section data-markdown>
+						<script type="text/template">
+						## Scala For Comprehensions
+						</script>
+					</section>
+
 					<section data-markdown>
 						<script type="text/template">
 						## Scala For Comprehensions
@@ -599,10 +655,85 @@
 							}
 						</script>
 					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala For Comprehensions
+
+						Since this is really just a syntactic sugar, we should be able to
+						expand this to just simple `map`s and `flatMap`s.
+
+						<br />
+
+						And so we shall
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala For Comprehensions
+
+						Rule #1
+
+							for (p <- e) yeild e′
+
+						expands to
+
+							e.map(p => e′)
+						</script>
+					</section>
+					
+					<section data-markdown>
+						<script type="text/template">
+						## Scala For Comprehensions
+
+						Rule #2
+
+							for (p <- e; p′ <- e′ ...) yeild e′′
+
+						expands to
+
+							e.flatMap { p => for (p′ <- e′ ...) yeild e′′ }
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala For Comprehensions
+
+						Rule #3
+
+							for (p <- e) e′
+
+						expands to
+
+							e.foreach(p => e′)
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala For Comprehensions
+
+						Rule #4
+
+							for (p <- e; p′ <- e′ ...) e′′
+
+						expands to
+
+							e.foreach { p => for (p′ <- e′ ...) ′ }
+						</script>
+					</section>
 				</section>
 
 				<!-- Try -->
 				<section>
+					<section data-markdown>
+						<script type="text/template">
+						## Scala Try
+						</script>
+					</section>
+					
 					<section data-markdown>
 						<script type="text/template">
 						## Scala Try
@@ -652,7 +783,7 @@
 						<script type="text/template">
 						## Scala Try
 
-						An example of flatMap
+						An example of `map`
 
 							def liveDangerously(attempt: Int) = {
 								println("Attempt number: " attempt.toString)
@@ -661,8 +792,34 @@
 									throw new Exception("whoops (attempt #" + attempt.toString = ")")
 							}
 
-							val attemptOne = Try { liveDangerously(1) }
-							val attemptTwo = attemptOne.flatMap(res => Try { liveDangerously(2) })
+							val twoAttempts : Try[_] = Try { liveDangerously(1) }.map { r => 
+								liveDangerously(2)
+							}
+
+							twoAttempts match {
+								case Failure(ex) => println(ex.message)
+								case _           => println("You made it out alive (twice!)")
+							}
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala Try
+
+						An example of `flatMap`
+
+							def liveDangerously(attempt: Int) = {
+								println("Attempt number: " attempt.toString)
+								val r = new java.util.Random
+								if (r.nextInt < 0) 
+									throw new Exception("whoops (attempt #" + attempt.toString = ")")
+							}
+
+							val attemptOne : Try[_] = Try { liveDangerously(1) }
+							val attemptTwo : Try[_] = attemptOne.flatMap { res => 
+								Try { liveDangerously(2) }
+							}
 
 							attemptTwo match {
 								case Failure(ex) => println(ex.message)
@@ -707,9 +864,10 @@
 							Treasure treasure = john.CollectTreasure(monster);
 							Item item = john.BuyRandomItem(treasure);
 
-						Let&lsquo;s make it safer... in Java.
 						</script>
 					</section>
+
+					<!--
 					
 					<section data-markdown>
 						<script type="text/template">
@@ -736,7 +894,52 @@
 						Geez that&lsquo;s hard to read!
 						</script>
 					</section>
+
+					-->
+
+					<section data-markdown>
+						<script type="text/markdown">
+						But how do we _require_ that you handle error conditions. And, more so,
+						how do we tell you, from the type, that an exception _could_ be thrown.
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/markdown">
+						## Scala Try
+
+						The Scala Version
+
+							class Player {
+								def KillMonster(): Try[DeadMonster] = { /* ... */ }
+								def CollectTreasure(from: DeadMonster): Try[Treasure] = { /* ... */ }
+								def BuyRandomItem(t: Treasure): Try[Item] = { /* ... */ }
+							}
+
+						Now you can see, in the types, that an Exception _could_ be thrown.
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala Try
+
+						More-so, the code _requires_ that you check for failure or success:
+
+							val john = new Player
+
+							val item = Try { john.KillMonster }
+							           .map(dm => john.CollectTreasure(dm))
+							           .map(t  => john.BuyRandomItem(t))
+
+							item match {
+								case Failure(ex) => // handle error
+								case Success(i)  => println("Acquired new item: " + i.toString)
+							}
+						</script>
+					</section>
 					
+					<!--
 					<section data-markdown>
 						<script type="text/template">
 						## Scala Try
@@ -754,7 +957,7 @@
 						We&lsquo;ll code for the _"Happy Path"_.
 						</script>
 					</section>
-					
+
 					<section data-markdown>
 						<script type="text/template">
 						## Scala Try
@@ -794,6 +997,16 @@
 						means that we could use the shorthand syntax of the `for` comprehension.
 						</script>
 					</section>
+					-->
+
+					<section data-markdown>
+						<script type="text/template">
+						## Scala Try
+
+						You may have noticed that we can also use `flatMap` with `Try`, which
+						means that we could use the shorthand syntax of the `for` comprehension.
+						</script>
+					</section>
 					
 					<section data-markdown>
 						<script type="text/template">
@@ -808,12 +1021,108 @@
 							} yield (item)
 
 							result match {
-								case Failure(ex) => {
-									val e = ex.asInstanceOf[GameException]
-									logger.error("Could not " + e.action + ": " + e.reason)
-								}
+								case Failure(ex) => // handle error
 								case Success(item) => println("Got item: " + item.toString)
 							}
+						</script>
+					</section>
+				</section>
+
+				<!-- Case Classes / Pattern Matching -->
+				<section>
+					<section data-markdown>
+						<script type="text/markdown">
+						## Scala Case Classes
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/markdown">
+						## Scala Case Classes
+
+						Case classes offer a simple way to do POJOs as well as pattern-match
+						against custom classes.
+						</script>
+					</section>
+					
+					<section data-markdown>
+						<script type="text/markdown">
+						## Scala Case Classes
+
+						All public fields in case class must be defined in constructor
+
+							case class User(firstName: String, lastName: String, age: Int ...)
+						</script>
+					</section>
+					
+					<section data-markdown>
+						<script type="text/markdown">
+						## Scala Case Classes
+
+						All fields specified in the constructor of a case-class are public and
+						immutable.
+
+							val user = new User("John", "Murray", 23)
+
+							user.firstName = "Frank"  # => Will throw an exception
+						</script>
+					</section>
+					
+					<section data-markdown>
+						<script type="text/markdown">
+						## Scala Case Classes
+
+						All fields specified can be pattern-matched against
+
+							val user = new User("John", "Murray", 23)
+
+							user match {
+								case User(fName, lName, age) => {
+									println(s"$fName $lName is $age years old")
+								}
+								# ...
+							}
+
+							user match {
+								case User(_, _, age) => println(s"You're $age")
+								# ...
+							}
+						</script>
+					</section>
+					
+					<section data-markdown>
+						<script type="text/markdown">
+						## Scala Case Classes
+
+						In scala, any method called `apply` can be called on the object just
+						like a function.
+
+						<br />
+
+						For example:
+
+							object SayHello {
+								def apply() = println("hello there stranger")
+							}
+
+							SayHello()  # => "hello there stranger"
+						</script>
+					</section>
+					
+					<section data-markdown>
+						<script type="text/markdown">
+						## Scala Case Classes
+
+						Case classes have a default apply method that is created within the
+						companion object.
+
+						<br />
+
+						So both are equally valid and result in the same action:
+
+							val me  = new User("John", "Murray", 23)
+
+							val you = User("Bob", "Jane", 37)
 						</script>
 					</section>
 				</section>
