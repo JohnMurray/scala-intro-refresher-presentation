@@ -82,7 +82,7 @@
 					<section>
 						<h2>For Expressions</h2>
 					</section>
-					
+
 					<section>
 						<h2>For Expressions</h2>
 						<p>
@@ -414,7 +414,7 @@
 
 							def printUser(id: Int)  = {
 								val userName = getUserInfo(id).map(u => u.firstName + " " + u.lastName)
-								match userName {
+								userName match {
 									case Some(n) => println(n)
 									case None    =>
 								}
@@ -478,7 +478,7 @@
 							case class User(lastName: String, firstName: String)
 
 							def getCar(id: Int) : Option[Car] = {
-								if (db.hasCarId(id)) db.getCar(id)
+								if (db.hasCarId(id)) Some(db.getCar(id))
 								else None
 							}
 						</script>
@@ -646,9 +646,9 @@
 								val name : Option[String] = for {
 									c <- car                            // flatMap of Car
 									d <- c.driver                       // map of User (driver)
-								} yeild(d.firstName + " " + d.lastName) 
+								} yield(d.firstName + " " + d.lastName) 
 
-								match name {                            // Option[String]
+								name match {                            // Option[String]
 									case Some(n) => println(n)          // String
 									case None    =>
 								}
@@ -675,7 +675,7 @@
 
 						Rule #1
 
-							for (p <- e) yeild e′
+							for (p <- e) yield e′
 
 						expands to
 
@@ -689,11 +689,11 @@
 
 						Rule #2
 
-							for (p <- e; p′ <- e′ ...) yeild e′′
+							for (p <- e; p′ <- e′ ...) yield e′′
 
 						expands to
 
-							e.flatMap { p => for (p′ <- e′ ...) yeild e′′ }
+							e.flatMap { p => for (p′ <- e′ ...) yield e′′ }
 						</script>
 					</section>
 
