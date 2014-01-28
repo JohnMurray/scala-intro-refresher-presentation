@@ -441,7 +441,7 @@
 						<script type="text/template">
 						## Scala flatMap
 
-						`flatMap` is similar to `map` but is different in it&lsquo;s
+						`flatMap` is similar to `map` but is different in its
 						method-signature.
 
 							def flatMap[B](f: A => Option[B]): Option[B]
@@ -929,9 +929,9 @@
 
 							val john = new Player
 
-							val item = Try { john.KillMonster }
-							           .map(dm => john.CollectTreasure(dm))
-							           .map(t  => john.BuyRandomItem(t))
+							val item = john.KillMonster
+							           .flatMap(dm => john.CollectTreasure(dm))
+							           .flatMap(t  => john.BuyRandomItem(t))
 
 							item match {
 								case Failure(ex) => // handle error
@@ -1000,6 +1000,11 @@
 					</section>
 					-->
 
+					<!--
+
+						This really isn't true since I'm not sure how the last case of the for-comp
+						is handled (would expand to a map when a flatMap would be required)
+						
 					<section data-markdown>
 						<script type="text/template">
 						## Scala Try
@@ -1016,9 +1021,9 @@
 							val john = new Player
 
 							val result = for {
-								monster  <- Try { john.KillMonster }
-								treasure <- Try { john.CollectTreasure(monster) }
-								item     <- Try { john.BuyItem(treasure) }
+								monster  <- john.KillMonster
+								treasure <- john.CollectTreasure(monster)
+								item     <- john.BuyItem(treasure)
 							} yield (item)
 
 							result match {
@@ -1027,6 +1032,8 @@
 							}
 						</script>
 					</section>
+
+					-->
 				</section>
 
 				<!-- Case Classes / Pattern Matching -->
